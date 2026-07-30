@@ -12,6 +12,7 @@
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="11.0.0-preview.6.26359.118" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="11.0.0-preview.6.26359.118" />
       <PackageReference Include="Spectre.Console" Version="0.57.2" />
+      <PackageReference Include="Spectre.Console.Cli" Version="0.55.0" />
     </ItemGroup>
 
 </Project>
