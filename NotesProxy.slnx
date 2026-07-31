@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="src/NotesProxy.Cli/NotesProxy.Cli.csproj" />
+  <Project Path="src/NotesProxy.Manager/NotesProxy.Manager.csproj" />
   <Project Path="src/NotesProxy.Tui/NotesProxy.Tui.csproj" />
 </Solution>
