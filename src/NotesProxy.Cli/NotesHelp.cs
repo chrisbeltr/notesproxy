@@ -58,7 +58,7 @@ internal class NotesHelp : HelpProvider
                     var optsList = new List<string>();
                     optsList.Add(string.Join("|", childOpts.ShortNames.Select(x => $"-{x}")));
                     optsList.Add(string.Join("|", childOpts.LongNames.Select(x => $"--{x}")));
-                    additionalList.Add(childOpts.IsRequired ? $"<{string.Join("|",  optsList)}>" : $"[{string.Join("|",  optsList)}]");
+                    additionalList.Add(childOpts.IsRequired ? $"{string.Join("|",  optsList)}" : $"[{string.Join("|",  optsList)}]");
                 }
                 additionals = $"{string.Join(" ", additionalList)}";
             }
