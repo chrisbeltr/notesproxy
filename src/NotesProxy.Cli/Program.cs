@@ -5,19 +5,6 @@ using NotesProxy.Manager;
 
 namespace NotesProxy.Cli;
 
-internal class C : Command<C.Settings> // Placeholder Command
-{
-    public class Settings : CommandSettings
-    {
-    }
-
-    protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellation)
-    {
-        Console.WriteLine("this is a placeholder!");
-        return 0;
-    }
-}
-
 class Program
 {
     static void Main(string[] args)
