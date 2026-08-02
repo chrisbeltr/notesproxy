@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Spectre.Console;
 
 namespace NotesProxy.Cli.Commands;
 
@@ -14,7 +15,7 @@ public class ConfigLocation : Command<ConfigLocation.Settings>
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         NoteManager.Instance.Config.SetLocation(settings.Location);
-        Console.WriteLine($"Successfully set default location to \"{settings.Location}\".");
+        AnsiConsole.MarkupLine($"[green]Successfully set default location to [/][yellow]\"{settings.Location}\"[/][green].[/]");
 
         return 0;
     }
