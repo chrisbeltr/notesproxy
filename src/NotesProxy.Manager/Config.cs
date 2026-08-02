@@ -11,10 +11,9 @@ internal class Config : IConfig
 
     public Config()
     {
-        var settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotesProxy");
-        if (!File.Exists(settingsPath))
+        if (!File.Exists(Path.GetDirectoryName(_settingsFile)))
         {
-            Directory.CreateDirectory(settingsPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(_settingsFile)!);
         }
         if (!File.Exists(_settingsFile))
         {
