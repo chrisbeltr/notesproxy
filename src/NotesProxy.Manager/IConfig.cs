@@ -8,5 +8,8 @@ public interface IConfig
     public string GetLocation();
     public void SetLocation(string location);
 
+    public string GetCategory();
+    public void SetCategory(string category);
+
     public Dictionary<string, object> GetAllSettings();
 }

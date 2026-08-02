@@ -1,3 +1,4 @@
+using Castle.Components.DictionaryAdapter.Xml;
 using Config.Net;
 
 namespace NotesProxy.Manager;
@@ -44,12 +45,23 @@ internal class Config : IConfig
         _settings.Location = location;
     }
 
+    public string GetCategory()
+    {
+        return _settings.Category ?? string.Empty;
+    }
+
+    public void SetCategory(string category)
+    {
+        _settings.Category = category;
+    }
+
     public Dictionary<string, object> GetAllSettings()
     {
         var dict = new Dictionary<string, object>
         {
             { "Editor", _settings.Editor },
-            { "Location", _settings.Location }
+            { "Location", _settings.Location },
+            { "Category", _settings.Category },
         };
         return dict;
     }
@@ -59,4 +71,5 @@ public interface IConfigSettings
 {
     string Editor { get; set; }
     string Location { get; set; }
+    string Category { get; set; }
 }
