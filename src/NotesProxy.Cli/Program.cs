@@ -1,7 +1,4 @@
 ﻿using NotesProxy.Cli.Commands;
-using Spectre.Console.Cli;
-using NotesProxy.Tui;
-using NotesProxy.Manager;
 
 namespace NotesProxy.Cli;
 

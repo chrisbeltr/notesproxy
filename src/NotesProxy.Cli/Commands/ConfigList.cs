@@ -1,6 +1,3 @@
-using NotesProxy.Manager;
-using Spectre.Console.Cli;
-
 namespace NotesProxy.Cli.Commands;
 
 public class ConfigList : Command<ConfigList.Settings>

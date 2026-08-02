@@ -1,6 +1,4 @@
 using System.ComponentModel;
-using NotesProxy.Manager;
-using Spectre.Console.Cli;
 
 namespace NotesProxy.Cli.Commands;
 

@@ -1,6 +1,3 @@
-using System.ComponentModel;
-using Spectre.Console.Cli;
-
 namespace NotesProxy.Cli.Commands;
 
 public class Interactive : Command<Interactive.Settings>
