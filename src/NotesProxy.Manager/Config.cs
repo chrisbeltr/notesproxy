@@ -30,16 +30,15 @@ internal class Config : IConfig
             .Build();
 
         // need to have at least something
-        if (GetEditor() == "") SetEditor("nano");
-        if (GetLocation() == "")
-            SetLocation(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotesProxy",
-                "notes"));
-        if (GetCategory() == "") SetCategory("default");
+        _settings.Editor ??= "nano";
+        _settings.Location ??= Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "NotesProxy", "notes");
+        _settings.Category ??= "default";
     }
 
     public string GetEditor()
     {
-        return _settings.Editor;
+        return _settings.Editor ?? string.Empty;
     }
 
     public void SetEditor(string editor)
@@ -49,7 +48,7 @@ internal class Config : IConfig
 
     public string GetLocation()
     {
-        return _settings.Location;
+        return _settings.Location ?? string.Empty;
     }
 
     public void SetLocation(string location)
@@ -59,7 +58,7 @@ internal class Config : IConfig
 
     public string GetCategory()
     {
-        return _settings.Category;
+        return _settings.Category ?? string.Empty;
     }
 
     public void SetCategory(string category)
@@ -71,9 +70,9 @@ internal class Config : IConfig
     {
         var dict = new Dictionary<string, object>
         {
-            { "Editor", _settings.Editor },
-            { "Location", _settings.Location },
-            { "Category", _settings.Category },
+            { "Editor", GetEditor() },
+            { "Location", GetLocation() },
+            { "Category", GetCategory() },
         };
         return dict;
     }
@@ -81,7 +80,7 @@ internal class Config : IConfig
 
 public interface IConfigSettings
 {
-    string Editor { get; set; }
-    string Location { get; set; }
-    string Category { get; set; }
+    string? Editor { get; set; }
+    string? Location { get; set; }
+    string? Category { get; set; }
 }
