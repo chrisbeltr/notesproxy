@@ -15,7 +15,7 @@ dotnet publish src/NotesProxy.Cli -c Release -r [platform] -o bin/
 
 the final program will be in the `bin` folder, you can copy that anywhere in your path for your operating system.
 
-i will also be making install scripts for each operating system (i've only gotten to linux for now sorry)
+i will also be making install scripts for each operating system (haven't done macos yet sorry macos users)
 
 ## how do i use it?
 
