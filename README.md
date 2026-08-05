@@ -34,7 +34,7 @@ the note commands are:
 - `edit <name> [-n name] [-l location] [-e editor] [-c category]`
     - edit the settings for a note with the specified name.
     - if an option is not supplied, it will stay the same.
-    - if the name or location are changed, the file will be renamed and moved respectively.
+    - if the name or location are changed, the file will be renamed and moved in the filesystem respectively.
 - `list`
     - lists all the notes currently stored in the database.
 
