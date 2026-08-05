@@ -6,6 +6,7 @@ public sealed class NoteManager
     {
         Config = new Config();
         Notes = new Notes();
+        Files = new Files();
     }
 
     private static readonly Lazy<NoteManager> LazyInstance = new(() => new NoteManager());
@@ -13,4 +14,5 @@ public sealed class NoteManager
 
     public IConfig Config { get; }
     public INotes Notes { get; }
+    public IFiles Files { get; }
 }
