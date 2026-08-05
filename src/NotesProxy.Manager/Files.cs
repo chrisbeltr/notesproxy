@@ -28,12 +28,21 @@ internal class Files : IFiles
                 (editorOverride ?? note[2] ?? NoteManager.Instance.Config.GetEditor()).Replace("\"", "\\\\\\\"");
             fullPath = $"\\\"{fullPath.Replace("\"", "\\\\\\\"")}\\\"";
             string commandPrompt;
-            if (OperatingSystem.IsWindows()) commandPrompt = "cmd";
-            else commandPrompt = "bash";
+            string commandPrefix;
+            if (OperatingSystem.IsWindows())
+            {
+                commandPrompt = "cmd";
+                commandPrefix = "/c";
+            }
+            else
+            {
+                commandPrompt = "bash";
+                commandPrefix = "-c";
+            }
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = commandPrompt,
-                Arguments = $"-c \"{editor} {fullPath}\"",
+                Arguments = $"{commandPrefix} \"{editor} {fullPath}\"",
                 UseShellExecute = true,
             };
 
