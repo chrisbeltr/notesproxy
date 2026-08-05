@@ -7,8 +7,12 @@ it's a quick little terminal note manager! it does not come with an editor, you 
 ## how do i build it?
 
 you need to have the [dotnet sdk installed](https://dotnet.microsoft.com/en-us/download), this project was built using .net 10.  
-after that, just run this command, replacing `[platform]` with one of `[win-x64, osx-x64, linux-x64]`:  
-```dotnet publish src/NotesProxy.Cli -c Release -r [platform] -o bin/```  
+after that, just run this command, replacing `[platform]` with one of `[win-x64, osx-x64, linux-x64]`:
+
+```
+dotnet publish src/NotesProxy.Cli -c Release -r [platform] -o bin/
+```
+
 the final program will be in the `bin` folder, you can copy that anywhere in your path for your operating system.
 
 i will also be making install scripts for each operating system (i've only gotten to linux for now sorry)
