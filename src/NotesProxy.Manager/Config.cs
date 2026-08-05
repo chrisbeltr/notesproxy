@@ -8,7 +8,8 @@ internal class Config : IConfig
     private IConfigSettings _settings;
 
     private string _settingsFile =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotesProxy", "appsettings.json");
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotesProxy",
+            "appsettings.json");
 
     public Config()
     {
@@ -16,21 +17,31 @@ internal class Config : IConfig
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_settingsFile)!);
         }
+
         if (!File.Exists(_settingsFile))
         {
             var f = File.CreateText(_settingsFile);
             f.Write("{}");
             f.Dispose();
         }
+
         _settings = new ConfigurationBuilder<IConfigSettings>()
             .UseJsonFile(_settingsFile)
             .Build();
+
+        // need to have at least something
+        if (GetEditor() == "") SetEditor("nano");
+        if (GetLocation() == "")
+            SetLocation(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotesProxy",
+                "notes"));
+        if (GetCategory() == "") SetCategory("default");
     }
-    
+
     public string GetEditor()
     {
-        return _settings.Editor ?? string.Empty;
+        return _settings.Editor;
     }
+
     public void SetEditor(string editor)
     {
         _settings.Editor = editor;
@@ -38,8 +49,9 @@ internal class Config : IConfig
 
     public string GetLocation()
     {
-        return _settings.Location ?? string.Empty;
+        return _settings.Location;
     }
+
     public void SetLocation(string location)
     {
         _settings.Location = location;
@@ -47,7 +59,7 @@ internal class Config : IConfig
 
     public string GetCategory()
     {
-        return _settings.Category ?? string.Empty;
+        return _settings.Category;
     }
 
     public void SetCategory(string category)
