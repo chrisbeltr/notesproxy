@@ -27,9 +27,12 @@ internal class Files : IFiles
             var editor =
                 (editorOverride ?? note[2] ?? NoteManager.Instance.Config.GetEditor()).Replace("\"", "\\\\\\\"");
             fullPath = $"\\\"{fullPath.Replace("\"", "\\\\\\\"")}\\\"";
+            string commandPrompt;
+            if (OperatingSystem.IsWindows()) commandPrompt = "cmd";
+            else commandPrompt = "bash";
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
-                FileName = "bash",
+                FileName = commandPrompt,
                 Arguments = $"-c \"{editor} {fullPath}\"",
                 UseShellExecute = true,
             };
