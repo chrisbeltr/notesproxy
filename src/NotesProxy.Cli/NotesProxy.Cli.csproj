@@ -9,6 +9,7 @@
         <SelfContained>true</SelfContained>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <IncludeNativeLibrariesForSelfContained>true</IncludeNativeLibrariesForSelfContained>
+        <AssemblyName>notesproxy</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
