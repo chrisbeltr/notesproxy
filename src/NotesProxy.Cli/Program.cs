@@ -21,7 +21,7 @@ class Program
                 note.AddCommand<NoteDelete>("delete").WithAlias("d").WithDescription("Delete a note\n(Alias: d)");
                 note.AddCommand<NoteList>("list").WithAlias("ls").WithDescription("List all notes\n(Alias: ls)");
                 note.AddCommand<NoteEdit>("edit").WithAlias("e").WithDescription("Edit a note\n(Alias: e)");
-                note.AddCommand<NoteMove>("move").WithAlias("m").WithDescription("Move a note\n(Alias: m)");
+                note.AddCommand<NoteOpen>("open").WithAlias("o").WithDescription("Open a note\n(Alias: o)");
             }).WithAlias("n");
             config.AddBranch("config", noteConfig =>
             {

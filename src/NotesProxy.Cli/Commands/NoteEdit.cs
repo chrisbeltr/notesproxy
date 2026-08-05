@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Spectre.Console;
 
 namespace NotesProxy.Cli.Commands;
 
@@ -29,6 +30,12 @@ public class NoteEdit : Command<NoteEdit.Settings>
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        NoteManager.Instance.Files.MoveNote(settings.NoteName, settings.NewName, settings.NewLocation);
+        
+        NoteManager.Instance.Notes.UpdateNote(settings.NoteName,
+            [settings.NewName, settings.NewLocation, settings.NewEditor, settings.NewCategory]);
+        AnsiConsole.MarkupLine($"[green]Successfully edited note [/][yellow]\"{settings.NoteName}\"[/][green].[/]");
+
+        return 0;
     }
 }
