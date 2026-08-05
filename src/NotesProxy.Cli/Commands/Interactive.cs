@@ -8,6 +8,6 @@ public class Interactive : Command<Interactive.Settings>
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Coming soon!");
     }
 }
