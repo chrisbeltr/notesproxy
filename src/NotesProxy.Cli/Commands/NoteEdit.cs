@@ -7,7 +7,7 @@ public class NoteEdit : Command<NoteEdit.Settings>
 {
     public class Settings : CommandSettings
     {
-        [CommandArgument(0, "<note name>")]
+        [CommandArgument(0, "<name>")]
         [Description("The name of the note to edit")]
         public required string NoteName { get; set; }
 
