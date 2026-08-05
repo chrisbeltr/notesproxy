@@ -21,30 +21,33 @@ internal class Files : IFiles
         var fullPath = Path.Combine(note[1]!, note[0]!);
         if (Path.Exists(fullPath))
         {
-            // absolutely awful amount of escaping i need to do
-            // and no, i am not supporting more than one nested quote
-            // if you name your files like that you're a psycho
-            var editor =
-                (editorOverride ?? note[2] ?? NoteManager.Instance.Config.GetEditor()).Replace("\"", "\\\\\\\"");
-            fullPath = $"\\\"{fullPath.Replace("\"", "\\\\\\\"")}\\\"";
-            string commandPrompt;
-            string commandPrefix;
+            ProcessStartInfo startInfo;
+            Console.WriteLine(fullPath);
+            var editor = (editorOverride ?? note[2] ?? NoteManager.Instance.Config.GetEditor());
             if (OperatingSystem.IsWindows())
             {
-                commandPrompt = "cmd";
-                commandPrefix = "/c";
+                startInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd",
+                    Arguments = $"/c {editor} {fullPath}",
+                    UseShellExecute = true,
+                };
             }
             else
             {
-                commandPrompt = "bash";
-                commandPrefix = "-c";
+                // absolutely awful amount of escaping i need to do
+                // and no, i am not supporting more than one nested quote
+                // if you name your files like that you're a psycho
+                editor = editor.Replace("\"", "\\\\\\\"");
+                fullPath = $"\\\"{fullPath.Replace("\"", "\\\\\\\"")}\\\"";
+                startInfo = new ProcessStartInfo
+                {
+                    FileName = "bash",
+                    Arguments = $"-c \"{editor} {fullPath}\"",
+                    UseShellExecute = true,
+                };
             }
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = commandPrompt,
-                Arguments = $"{commandPrefix} \"{editor} {fullPath}\"",
-                UseShellExecute = true,
-            };
+
 
             using var process = Process.Start(startInfo);
             process?.WaitForExit();
@@ -68,10 +71,10 @@ internal class Files : IFiles
         var oldNote = _notes.GetNote(oldName);
         var name = newName ?? oldName;
         var location = newLocation ?? oldNote[1]!;
-        
+
         if (Path.Combine(oldNote[1]!, oldNote[0]!) == Path.Combine(location, name)) return;
         if (!Path.Exists(location)) Directory.CreateDirectory(location);
-        
+
         File.Move(Path.Combine(oldNote[1]!, oldNote[0]!), Path.Combine(location, name));
     }
 
