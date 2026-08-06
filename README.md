@@ -31,7 +31,7 @@ the note commands are:
 - `open <name> [-e editor]`
     - open a note with the specified name.
     - if the editor option is not supplied, it will check the note's settings to find and editor, and then it will default to the editor in the configuration file.
-- `edit <name> [-n name] [-l location] [-e editor] [-c category] [-a auto open]`
+- `edit <name> [-n name] [-l location] [-e editor] [-c category]`
     - edit the settings for a note with the specified name.
     - if an option is not supplied, it will stay the same.
     - if the name or location are changed, the file will be renamed and moved in the filesystem respectively.
@@ -42,6 +42,6 @@ the configuration commands are:
 
 - `edit [-l location] [-e editor] [-c category] [-a auto open]`
     - edit the settings in the configuration file.
-    - the auto open option works both as a normal option (type either true or false) or as a flag (include it in order to set it to true, though it won't be set to false by excluding it).
+    - the auto open option works both as a normal option (type either true or false after it) or as a flag (include it in order to set it to true, though it won't be set to false by excluding it).
 - `list`
     - list all the current settings in the configuration file.
