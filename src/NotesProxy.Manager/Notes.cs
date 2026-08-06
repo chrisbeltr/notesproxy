@@ -29,14 +29,15 @@ internal class Notes : INotes
                                       id INTEGER PRIMARY KEY,
                                       name TEXT NOT NULL UNIQUE,
                                       location TEXT NOT NULL,
-                                      editor TEXT,
-                                      category TEXT
+                                      editor TEXT NOT NULL,
+                                      category TEXT NOT NULL,
+                                      autoopen INTEGER NOT NULL
                                   );
                                   """;
         tableCreate.ExecuteNonQuery();
     }
-    
-    internal List<string?> GetNote(string name)
+
+    private Note? FindNote(string name)
     {
         using var connection = new SqliteConnection($"Data Source={_databaseFile};");
         connection.Open();
@@ -46,28 +47,31 @@ internal class Notes : INotes
         command.Parameters.AddWithValue("@name", name);
 
         using var reader = command.ExecuteReader();
-        var list = new List<string?>();
+        Note? note = null;
         while (reader.Read())
         {
-            var schema = reader.GetColumnSchema();
-            for (var i = 1; i < schema.Count; i++)
-            {
-                list.Add(reader.IsDBNull(i) ? null : reader.GetString(i));
-            }
+            note = new Note(
+                Name: reader.GetString(1),
+                Location: reader.GetString(2),
+                Editor: reader.GetString(3),
+                Category: reader.GetString(4),
+                AutoOpen: reader.GetBoolean(5)
+            );
         }
 
-        return list;
+        return note;
     }
 
-    internal bool NoteExists(string name)
+    public Note GetNote(string name)
     {
-        var note = GetNote(name);
-        return note.Count > 0;
+        return FindNote(name) ?? throw new Exception("Note does not exist.");
     }
 
-    public List<List<string?>> QueryDatabase(string? queryLocation = null)
+    public bool NoteExists(string name) => FindNote(name) != null;
+
+    public List<Note> QueryDatabase(string? queryLocation = null)
     {
-        var list = new List<List<string?>>();
+        var list = new List<Note>();
 
         using var connection = new SqliteConnection($"Data Source={_databaseFile};");
         connection.Open();
@@ -81,30 +85,34 @@ internal class Notes : INotes
         var schema = reader.GetColumnSchema();
         while (reader.Read())
         {
-            var columns = new List<string?>();
-            for (var i = 1; i < schema.Count; i++)
+            var note = new Note
             {
-                columns.Add(reader.IsDBNull(i) ? null : reader.GetString(i));
-            }
+                Name = reader.GetString(1),
+                Location = reader.GetString(2),
+                Editor = reader.GetString(3),
+                Category = reader.GetString(4),
+                AutoOpen = reader.GetBoolean(5),
+            };
 
-            list.Add(columns);
+            list.Add(note);
         }
 
         return list;
     }
 
-    public void InsertNote(List<string?> note)
+    public void InsertNote(Note note)
     {
         using var connection = new SqliteConnection($"Data Source={_databaseFile};");
         connection.Open();
 
         using var noteAdd = connection.CreateCommand();
         noteAdd.CommandText =
-            "INSERT INTO notes (name, location, editor, category) VALUES (@name, @location, @editor, @category)";
-        noteAdd.Parameters.AddWithValue("@name", note[0]);
-        noteAdd.Parameters.AddWithValue("@location", note[1]);
-        noteAdd.Parameters.AddWithValue("@editor", note[2] == null ? DBNull.Value : note[2]);
-        noteAdd.Parameters.AddWithValue("@category", note[3] == null ? DBNull.Value : note[3]);
+            "INSERT INTO notes (name, location, editor, category, autoopen) VALUES (@name, @location, @editor, @category, @autoopen)";
+        noteAdd.Parameters.AddWithValue("@name", note.Name);
+        noteAdd.Parameters.AddWithValue("@location", note.Location);
+        noteAdd.Parameters.AddWithValue("@editor", note.Editor);
+        noteAdd.Parameters.AddWithValue("@category", note.Category);
+        noteAdd.Parameters.AddWithValue("@autoopen", note.AutoOpen);
 
         try
         {
@@ -112,12 +120,10 @@ internal class Notes : INotes
         }
         catch (SqliteException ex)
         {
-            string message = ex.SqliteExtendedErrorCode switch
-            {
-                2067 => "Note already exists.", // 2067 - SQLITE_CONSTRAINT_UNIQUE
-                _ => "Unknown error. Please try again later."
-            };
-            throw new Exception(message);
+            if (ex.SqliteExtendedErrorCode == 2067)
+                throw new Exception("Note already exists."); // 2067 - SQLITE_CONSTRAINT_UNIQUE
+            Console.WriteLine("Unknown error... Please report this!");
+            throw;
         }
     }
 
@@ -138,43 +144,41 @@ internal class Notes : INotes
     {
         using var connection = new SqliteConnection($"Data Source={_databaseFile};");
         connection.Open();
-        
+
         using var noteDelete = connection.CreateCommand();
         noteDelete.CommandText = "DELETE FROM notes WHERE id = (SELECT id FROM notes LIMIT 1 OFFSET @offset)";
         noteDelete.Parameters.AddWithValue("@offset", index - 1);
-        
+
         noteDelete.ExecuteNonQuery();
     }
 
-    public void UpdateNote(string name, List<string?> newNote)
+    public void UpdateNote(string name, Note newNote)
     {
         if (!NoteExists(name)) throw new Exception("Note does not exist.");
-        var oldNote = GetNote(name);
-        
+
         using var connection = new SqliteConnection($"Data Source={_databaseFile};");
         connection.Open();
 
         using var noteUpdate = connection.CreateCommand();
         noteUpdate.CommandText =
-            "UPDATE notes SET name = @newname, location = @newlocation, editor = @neweditor, category = @newcategory WHERE name = @name";
-        noteUpdate.Parameters.AddWithValue("@newname", newNote[0] == "" ? DBNull.Value : newNote[0] != null ? newNote[0] : oldNote[0] != null ? oldNote[0] : DBNull.Value);
-        noteUpdate.Parameters.AddWithValue("@newlocation", newNote[1] == "" ? DBNull.Value : newNote[1] != null ? newNote[1] : oldNote[1] != null ? oldNote[1] : DBNull.Value);
-        noteUpdate.Parameters.AddWithValue("@neweditor", newNote[2] == "" ? DBNull.Value : newNote[2] != null ? newNote[2] : oldNote[2] != null ? oldNote[2] : DBNull.Value);
-        noteUpdate.Parameters.AddWithValue("@newcategory", newNote[3] == "" ? DBNull.Value : newNote[3] != null ? newNote[3] : oldNote[3] != null ? oldNote[3] : DBNull.Value);
+            "UPDATE notes SET name = @newname, location = @newlocation, editor = @neweditor, category = @newcategory, autoopen = @newautoopen WHERE name = @name";
+        noteUpdate.Parameters.AddWithValue("@newname", newNote.Name);
+        noteUpdate.Parameters.AddWithValue("@newlocation", newNote.Location);
+        noteUpdate.Parameters.AddWithValue("@neweditor", newNote.Editor);
+        noteUpdate.Parameters.AddWithValue("@newcategory", newNote.Category);
+        noteUpdate.Parameters.AddWithValue("@newautoopen", newNote.AutoOpen);
         noteUpdate.Parameters.AddWithValue("@name", name);
-        
+
         try
         {
             noteUpdate.ExecuteNonQuery();
         }
         catch (SqliteException ex)
         {
-            string message = ex.SqliteExtendedErrorCode switch
-            {
-                2067 => "Note already exists.", // 2067 - SQLITE_CONSTRAINT_UNIQUE
-                _ => "Unknown error. Please try again later."
-            };
-            throw new Exception(message);
+            if (ex.SqliteExtendedErrorCode == 2067)
+                throw new Exception("Note already exists."); // 2067 - SQLITE_CONSTRAINT_UNIQUE
+            Console.WriteLine("Unknown error... Please report this!");
+            throw;
         }
     }
 }

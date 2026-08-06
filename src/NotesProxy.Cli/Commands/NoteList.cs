@@ -20,17 +20,18 @@ public class NoteList : Command<NoteList.Settings>
         var list = NoteManager.Instance.Notes.QueryDatabase();
         if (list.Count > 0)
         {
-            foreach (var _ in list[0]) grid.AddColumn(new GridColumn { Padding = new Padding(1, 0, 0, 0) });
+            for (var i = 0; i < 5; i++) grid.AddColumn(new GridColumn { Padding = new Padding(1, 0, 0, 0) });
             for (var i = 0; i < list.Count; i++)
             {
                 var note = list[i];
-
+        
                 grid.AddRow([
                     new Text($"{i + 1}."),
                     GetNoteName(note),
                     GetNoteLocation(note),
                     GetNoteEditor(note),
-                    GetNoteCategory(note)
+                    GetNoteCategory(note),
+                    GetNoteAutoOpen(note),
                 ]);
             }
         }
@@ -40,23 +41,28 @@ public class NoteList : Command<NoteList.Settings>
         return 0;
     }
 
-    private Text GetNoteName(List<string?> note)
+    private Text GetNoteName(Note note)
     {
-        return new Text($"\"{note[0]}\"");
+        return new Text($"\"{note.Name}\"");
     }
 
-    private Text GetNoteLocation(List<string?> note)
+    private Text GetNoteLocation(Note note)
     {
-        return new Text($"\"{note[1]}\"");
+        return new Text($"\"{note.Location}\"");
     }
 
-    private Text GetNoteEditor(List<string?> note)
+    private Text GetNoteEditor(Note note)
     {
-        return new Text($"\"{note[2] ?? NoteManager.Instance.Config.GetEditor()}\"");
+        return new Text($"\"{note.Editor}\"");
     }
 
-    private Text GetNoteCategory(List<string?> note)
+    private Text GetNoteCategory(Note note)
     {
-        return new Text($"\"{note[3] ?? NoteManager.Instance.Config.GetCategory()}\"");
+        return new Text($"\"{note.Category}\"");
+    }
+
+    private Text GetNoteAutoOpen(Note note)
+    {
+        return new Text($"{note.AutoOpen}");
     }
 }

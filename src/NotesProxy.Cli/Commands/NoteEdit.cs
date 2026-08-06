@@ -26,14 +26,23 @@ public class NoteEdit : Command<NoteEdit.Settings>
         [CommandOption("-c|--category")]
         [Description("The new category for the note")]
         public string? NewCategory { get; set; }
+
+        [CommandOption("-a|--autoopen")]
+        [Description("The setting that decides whether notes will automatically open when using the create command")]
+        public bool? AutoOpen { get; set; }
     }
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
+        if (!NoteManager.Instance.Notes.NoteExists(settings.NoteName)) throw new Exception("Note does not exist.");
+        var oldNote = NoteManager.Instance.Notes.GetNote(settings.NoteName);
+
         NoteManager.Instance.Files.MoveNote(settings.NoteName, settings.NewName, settings.NewLocation);
-        
+
         NoteManager.Instance.Notes.UpdateNote(settings.NoteName,
-            [settings.NewName, settings.NewLocation, settings.NewEditor, settings.NewCategory]);
+            new Note(settings.NewName ?? oldNote.Name, settings.NewLocation ?? oldNote.Location,
+                settings.NewEditor ?? oldNote.Editor, settings.NewCategory ?? oldNote.Category,
+                settings.AutoOpen ?? oldNote.AutoOpen));
         AnsiConsole.MarkupLine($"[green]Successfully edited note [/][yellow]\"{settings.NoteName}\"[/][green].[/]");
 
         return 0;

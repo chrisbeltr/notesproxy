@@ -2,8 +2,10 @@ namespace NotesProxy.Manager;
 
 public interface INotes
 {
-    public List<List<string?>> QueryDatabase(string? queryLocation = null);
-    public void InsertNote(List<string?> note);
+    public Note GetNote(string name);
+    public bool NoteExists(string name);
+    public List<Note> QueryDatabase(string? queryLocation = null);
+    public void InsertNote(Note note);
     public void DeleteNote(string note);
-    public void UpdateNote(string name, List<string?> newNote);
+    public void UpdateNote(string name, Note newNote);
 }

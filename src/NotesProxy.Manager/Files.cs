@@ -18,40 +18,38 @@ internal class Files : IFiles
         if (!_notes.NoteExists(name)) throw new Exception("Note does not exist.");
 
         var note = _notes.GetNote(name);
-        var fullPath = Path.Combine(note[1]!, note[0]!);
-        if (Path.Exists(fullPath))
+        var fullPath = Path.Combine(note.Location, note.Name);
+        if (!Path.Exists(fullPath)) throw new Exception("Note location does not exist.");
+        ProcessStartInfo startInfo;
+        Console.WriteLine(fullPath);
+        var editor = (editorOverride ?? note.Editor);
+        if (OperatingSystem.IsWindows())
         {
-            ProcessStartInfo startInfo;
-            Console.WriteLine(fullPath);
-            var editor = (editorOverride ?? note[2] ?? NoteManager.Instance.Config.GetEditor());
-            if (OperatingSystem.IsWindows())
+            startInfo = new ProcessStartInfo
             {
-                startInfo = new ProcessStartInfo
-                {
-                    FileName = "cmd",
-                    Arguments = $"/c {editor} {fullPath}",
-                    UseShellExecute = true,
-                };
-            }
-            else
-            {
-                // absolutely awful amount of escaping i need to do
-                // and no, i am not supporting more than one nested quote
-                // if you name your files like that you're a psycho
-                editor = editor.Replace("\"", "\\\\\\\"");
-                fullPath = $"\\\"{fullPath.Replace("\"", "\\\\\\\"")}\\\"";
-                startInfo = new ProcessStartInfo
-                {
-                    FileName = "bash",
-                    Arguments = $"-c \"{editor} {fullPath}\"",
-                    UseShellExecute = true,
-                };
-            }
-
-
-            using var process = Process.Start(startInfo);
-            process?.WaitForExit();
+                FileName = "cmd",
+                Arguments = $"/c {editor} {fullPath}",
+                UseShellExecute = true,
+            };
         }
+        else
+        {
+            // absolutely awful amount of escaping i need to do
+            // and no, i am not supporting more than one nested quote
+            // if you name your files like that you're a psycho
+            editor = editor.Replace("\"", "\\\\\\\"");
+            fullPath = $"\\\"{fullPath.Replace("\"", "\\\\\\\"")}\\\"";
+            startInfo = new ProcessStartInfo
+            {
+                FileName = "bash",
+                Arguments = $"-c \"{editor} {fullPath}\"",
+                UseShellExecute = true,
+            };
+        }
+
+
+        using var process = Process.Start(startInfo);
+        process?.WaitForExit();
     }
 
     public void CreateNote(string name, string location)
@@ -70,12 +68,12 @@ internal class Files : IFiles
 
         var oldNote = _notes.GetNote(oldName);
         var name = newName ?? oldName;
-        var location = newLocation ?? oldNote[1]!;
+        var location = newLocation ?? oldNote.Location;
 
-        if (Path.Combine(oldNote[1]!, oldNote[0]!) == Path.Combine(location, name)) return;
+        if (Path.Combine(oldNote.Location, oldNote.Name) == Path.Combine(location, name)) return;
         if (!Path.Exists(location)) Directory.CreateDirectory(location);
 
-        File.Move(Path.Combine(oldNote[1]!, oldNote[0]!), Path.Combine(location, name));
+        File.Move(Path.Combine(oldNote.Location, oldNote.Name), Path.Combine(location, name));
     }
 
     public void DeleteNote(string name)
@@ -85,7 +83,7 @@ internal class Files : IFiles
 
         try
         {
-            File.Delete(Path.Combine(note[1]!, note[0]!));
+            File.Delete(Path.Combine(note.Location, note.Name));
         }
         catch (Exception)
         {

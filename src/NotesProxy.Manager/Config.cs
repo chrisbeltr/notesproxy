@@ -35,6 +35,7 @@ internal class Config : IConfig
         _settings.Location ??= Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "NotesProxy", "notes");
         _settings.Category ??= "default";
+        _settings.AutoOpen ??= true;
     }
 
     public string GetEditor()
@@ -67,6 +68,16 @@ internal class Config : IConfig
         _settings.Category = category;
     }
 
+    public bool GetAutoOpen()
+    {
+        return _settings.AutoOpen ?? true;
+    }
+
+    public void SetAutoOpen(bool autoOpen)
+    {
+        _settings.AutoOpen = autoOpen;
+    }
+
     public Dictionary<string, object> GetAllSettings()
     {
         var dict = new Dictionary<string, object>
@@ -74,6 +85,7 @@ internal class Config : IConfig
             { "Editor", GetEditor() },
             { "Location", GetLocation() },
             { "Category", GetCategory() },
+            { "Auto Open", GetAutoOpen() },
         };
         return dict;
     }
@@ -84,4 +96,5 @@ public interface IConfigSettings
     string? Editor { get; set; }
     string? Location { get; set; }
     string? Category { get; set; }
+    bool? AutoOpen { get; set; }
 }

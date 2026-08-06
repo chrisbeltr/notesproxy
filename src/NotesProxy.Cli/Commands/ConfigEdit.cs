@@ -18,6 +18,10 @@ public class ConfigEdit : Command<ConfigEdit.Settings>
         [CommandOption("-c|--category")]
         [Description("The default category for notes")]
         public string? Category { get; set; }
+
+        [CommandOption("-a|--autoopen")]
+        [Description("The setting that decides whether notes will automatically open when using the create command")]
+        public bool? AutoOpen { get; set; }
     }
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
@@ -25,6 +29,7 @@ public class ConfigEdit : Command<ConfigEdit.Settings>
         if (settings.Location != null) NoteManager.Instance.Config.SetLocation(settings.Location);
         if (settings.Editor != null) NoteManager.Instance.Config.SetEditor(settings.Editor);
         if (settings.Category != null) NoteManager.Instance.Config.SetCategory(settings.Category);
+        if (settings.AutoOpen.HasValue) NoteManager.Instance.Config.SetAutoOpen(settings.AutoOpen.Value);
         
         AnsiConsole.MarkupLine(
             $"[green]Successfully changed configuration file.[/]");

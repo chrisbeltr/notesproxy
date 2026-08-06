@@ -11,5 +11,8 @@ public interface IConfig
     public string GetCategory();
     public void SetCategory(string category);
 
+    public bool GetAutoOpen();
+    public void SetAutoOpen(bool autoOpen);
+
     public Dictionary<string, object> GetAllSettings();
 }

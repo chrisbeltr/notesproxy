@@ -22,6 +22,10 @@ public class NoteCreate : Command<NoteCreate.Settings>
         [CommandOption("-c|--category")]
         [Description("The category for the note")]
         public string? Category { get; set; }
+        
+        [CommandOption("-a|--autoopen")]
+        [Description("The setting that decides whether notes will automatically open when using the create command")]
+        public bool? AutoOpen { get; set; }
     }
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
@@ -34,12 +38,13 @@ public class NoteCreate : Command<NoteCreate.Settings>
 
         NoteManager.Instance.Files.CreateNote(noteName, noteLocation);
 
-        NoteManager.Instance.Notes.InsertNote([
+        NoteManager.Instance.Notes.InsertNote(new Note(
             noteName,
             noteLocation,
-            settings.Editor,
-            settings.Category
-        ]);
+            settings.Editor ?? NoteManager.Instance.Config.GetEditor(),
+            settings.Category ?? NoteManager.Instance.Config.GetCategory(),
+            settings.AutoOpen ?? NoteManager.Instance.Config.GetAutoOpen()
+        ));
         
         NoteManager.Instance.Files.OpenNote(noteName);
 
