@@ -67,7 +67,7 @@ internal class Notes : INotes
 
     public bool NoteExists(string name) => FindNote(name) != null;
 
-    public List<Note> QueryDatabase(string? queryLocation = null)
+    public List<Note> QueryDatabase(string? queryCategory = null)
     {
         var list = new List<Note>();
 
@@ -76,8 +76,8 @@ internal class Notes : INotes
 
         using var command = connection.CreateCommand();
         command.CommandText =
-            queryLocation == null ? "SELECT * FROM notes" : "SELECT * FROM notes WHERE location = @query";
-        command.Parameters.AddWithValue("@query", queryLocation);
+            queryCategory == null ? "SELECT * FROM notes" : "SELECT * FROM notes WHERE category = @query";
+        command.Parameters.AddWithValue("@query", queryCategory);
 
         using var reader = command.ExecuteReader();
         var schema = reader.GetColumnSchema();

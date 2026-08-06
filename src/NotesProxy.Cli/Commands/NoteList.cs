@@ -8,6 +8,9 @@ public class NoteList : Command<NoteList.Settings>
 {
     public class Settings : CommandSettings
     {
+        [CommandArgument(0, "[category]")]
+        [Description("Only return notes in a certain category.")]
+        public string? Category { get; set; }
     }
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
@@ -17,7 +20,7 @@ public class NoteList : Command<NoteList.Settings>
         var grid = new Grid();
         grid.AddColumn(new GridColumn { Padding = new Padding(4, 0, 0, 0) });
 
-        var list = NoteManager.Instance.Notes.QueryDatabase();
+        var list = NoteManager.Instance.Notes.QueryDatabase(settings.Category);
         if (list.Count > 0)
         {
             for (var i = 0; i < 4; i++) grid.AddColumn(new GridColumn { Padding = new Padding(1, 0, 0, 0) });

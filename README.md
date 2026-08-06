@@ -38,8 +38,9 @@ the note commands are:
     - edit the settings for a note with the specified name.
     - if an option is not supplied, it will stay the same.
     - if the name or location are changed, the file will be renamed and moved in the filesystem respectively.
-- `list`
+- `list [-c category]`
     - lists all the notes currently stored in the database.
+    - if category is supplied, command lists all the notes in that category.
 - `nuke`
     - deletes all currently stored notes.
     - this cannot be undone.
