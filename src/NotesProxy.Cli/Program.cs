@@ -22,6 +22,7 @@ class Program
                 note.AddCommand<NoteList>("list").WithAlias("ls").WithDescription("List all notes\n(Alias: ls)");
                 note.AddCommand<NoteEdit>("edit").WithAlias("e").WithDescription("Edit a note\n(Alias: e)");
                 note.AddCommand<NoteOpen>("open").WithAlias("o").WithDescription("Open a note\n(Alias: o)");
+                note.AddCommand<NoteNuke>("nuke").WithAlias("n").WithDescription("Delete all currently stored notes.\n(Alias: n)");
             }).WithAlias("n");
             config.AddBranch("config", noteConfig =>
             {
