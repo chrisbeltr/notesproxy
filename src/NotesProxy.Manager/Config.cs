@@ -31,7 +31,7 @@ internal class Config : IConfig
 
         // need to have at least something
         if (OperatingSystem.IsWindows()) _settings.Editor ??= "notepad.exe";
-        else _settings.Editor = "nano";
+        else _settings.Editor ??= "nano";
         _settings.Location ??= Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "NotesProxy", "notes");
         _settings.Category ??= "default";
