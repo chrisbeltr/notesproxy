@@ -21,7 +21,7 @@ i will also be making install scripts for each operating system (haven't done ma
 
 the note commands are:
 
-- `create [name] [-l location] [-e editor] [-c category]`
+- `create [name] [-l location] [-e editor] [-c category] [-a auto open]`
     - create a note, with the specified settings.
         - if no name is supplied, the default naming format is `note-[M-d-yy-HHmmss]`.
         - if location, editor, or category are not supplied, they will be filled in with the defaults from the configuration file.
@@ -31,7 +31,7 @@ the note commands are:
 - `open <name> [-e editor]`
     - open a note with the specified name.
     - if the editor option is not supplied, it will check the note's settings to find and editor, and then it will default to the editor in the configuration file.
-- `edit <name> [-n name] [-l location] [-e editor] [-c category]`
+- `edit <name> [-n name] [-l location] [-e editor] [-c category] [-a auto open]`
     - edit the settings for a note with the specified name.
     - if an option is not supplied, it will stay the same.
     - if the name or location are changed, the file will be renamed and moved in the filesystem respectively.
@@ -40,11 +40,8 @@ the note commands are:
 
 the configuration commands are:
 
-- `location <location>`
-    - change the default location for new notes.
-- `editor <editor>`
-    - change the default editor command for new notes.
-- `category <category>`
-    - change the default category for new notes.
+- `edit [-l location] [-e editor] [-c category] [-a auto open]`
+    - edit the settings in the configuration file.
+    - the auto open option works both as a normal option (type either true or false) or as a flag (include it in order to set it to true, though it won't be set to false by excluding it).
 - `list`
     - list all the current settings in the configuration file.
