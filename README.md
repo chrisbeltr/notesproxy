@@ -19,6 +19,8 @@ i will also be making install scripts for each operating system (haven't done ma
 
 ## how do i use it?
 
+you can run `notesproxy --help` to see this menu in the terminal, there you can see additional information and command aliases.
+
 the note commands are:
 
 - `create [name] [-l location] [-e editor] [-c category] [-a auto open]`
