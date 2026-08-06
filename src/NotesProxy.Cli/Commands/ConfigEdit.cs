@@ -1,0 +1,34 @@
+using System.ComponentModel;
+using Spectre.Console;
+
+namespace NotesProxy.Cli.Commands;
+
+public class ConfigEdit : Command<ConfigEdit.Settings>
+{
+    public class Settings : CommandSettings
+    {
+        [CommandOption("-l|--location")]
+        [Description("The default location for new notes")]
+        public string? Location { get; set; }
+
+        [CommandOption("-e|--editor")]
+        [Description("The command to run the default editor")]
+        public string? Editor { get; set; }
+
+        [CommandOption("-c|--category")]
+        [Description("The default category for notes")]
+        public string? Category { get; set; }
+    }
+
+    protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
+    {
+        if (settings.Location != null) NoteManager.Instance.Config.SetLocation(settings.Location);
+        if (settings.Editor != null) NoteManager.Instance.Config.SetEditor(settings.Editor);
+        if (settings.Category != null) NoteManager.Instance.Config.SetCategory(settings.Category);
+        
+        AnsiConsole.MarkupLine(
+            $"[green]Successfully changed configuration file.[/]");
+
+        return 0;
+    }
+}
