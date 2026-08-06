@@ -26,10 +26,6 @@ public class NoteEdit : Command<NoteEdit.Settings>
         [CommandOption("-c|--category")]
         [Description("The new category for the note")]
         public string? NewCategory { get; set; }
-
-        [CommandOption("-a|--autoopen")]
-        [Description("The setting that decides whether notes will automatically open when using the create command")]
-        public bool? AutoOpen { get; set; }
     }
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
@@ -41,8 +37,7 @@ public class NoteEdit : Command<NoteEdit.Settings>
 
         NoteManager.Instance.Notes.UpdateNote(settings.NoteName,
             new Note(settings.NewName ?? oldNote.Name, settings.NewLocation ?? oldNote.Location,
-                settings.NewEditor ?? oldNote.Editor, settings.NewCategory ?? oldNote.Category,
-                settings.AutoOpen ?? oldNote.AutoOpen));
+                settings.NewEditor ?? oldNote.Editor, settings.NewCategory ?? oldNote.Category));
         AnsiConsole.MarkupLine($"[green]Successfully edited note [/][yellow]\"{settings.NoteName}\"[/][green].[/]");
 
         return 0;

@@ -20,7 +20,7 @@ public class NoteList : Command<NoteList.Settings>
         var list = NoteManager.Instance.Notes.QueryDatabase();
         if (list.Count > 0)
         {
-            for (var i = 0; i < 5; i++) grid.AddColumn(new GridColumn { Padding = new Padding(1, 0, 0, 0) });
+            for (var i = 0; i < 4; i++) grid.AddColumn(new GridColumn { Padding = new Padding(1, 0, 0, 0) });
             for (var i = 0; i < list.Count; i++)
             {
                 var note = list[i];
@@ -31,7 +31,6 @@ public class NoteList : Command<NoteList.Settings>
                     GetNoteLocation(note),
                     GetNoteEditor(note),
                     GetNoteCategory(note),
-                    GetNoteAutoOpen(note),
                 ]);
             }
         }
@@ -59,10 +58,5 @@ public class NoteList : Command<NoteList.Settings>
     private Text GetNoteCategory(Note note)
     {
         return new Text($"\"{note.Category}\"");
-    }
-
-    private Text GetNoteAutoOpen(Note note)
-    {
-        return new Text($"{note.AutoOpen}");
     }
 }

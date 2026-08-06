@@ -42,11 +42,11 @@ public class NoteCreate : Command<NoteCreate.Settings>
             noteName,
             noteLocation,
             settings.Editor ?? NoteManager.Instance.Config.GetEditor(),
-            settings.Category ?? NoteManager.Instance.Config.GetCategory(),
-            settings.AutoOpen ?? NoteManager.Instance.Config.GetAutoOpen()
+            settings.Category ?? NoteManager.Instance.Config.GetCategory()
         ));
         
-        NoteManager.Instance.Files.OpenNote(noteName);
+        if (NoteManager.Instance.Config.GetAutoOpen() || (settings.AutoOpen.HasValue && settings.AutoOpen.Value))
+            NoteManager.Instance.Files.OpenNote(noteName);
 
         AnsiConsole.MarkupLine($"[green]Successfully created note [/][yellow]\"{noteName}\"[/][green].[/]");
 

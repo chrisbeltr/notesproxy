@@ -30,8 +30,7 @@ internal class Notes : INotes
                                       name TEXT NOT NULL UNIQUE,
                                       location TEXT NOT NULL,
                                       editor TEXT NOT NULL,
-                                      category TEXT NOT NULL,
-                                      autoopen INTEGER NOT NULL
+                                      category TEXT NOT NULL
                                   );
                                   """;
         tableCreate.ExecuteNonQuery();
@@ -54,8 +53,7 @@ internal class Notes : INotes
                 Name: reader.GetString(1),
                 Location: reader.GetString(2),
                 Editor: reader.GetString(3),
-                Category: reader.GetString(4),
-                AutoOpen: reader.GetBoolean(5)
+                Category: reader.GetString(4)
             );
         }
 
@@ -90,8 +88,7 @@ internal class Notes : INotes
                 Name = reader.GetString(1),
                 Location = reader.GetString(2),
                 Editor = reader.GetString(3),
-                Category = reader.GetString(4),
-                AutoOpen = reader.GetBoolean(5),
+                Category = reader.GetString(4)
             };
 
             list.Add(note);
@@ -107,12 +104,11 @@ internal class Notes : INotes
 
         using var noteAdd = connection.CreateCommand();
         noteAdd.CommandText =
-            "INSERT INTO notes (name, location, editor, category, autoopen) VALUES (@name, @location, @editor, @category, @autoopen)";
+            "INSERT INTO notes (name, location, editor, category) VALUES (@name, @location, @editor, @category)";
         noteAdd.Parameters.AddWithValue("@name", note.Name);
         noteAdd.Parameters.AddWithValue("@location", note.Location);
         noteAdd.Parameters.AddWithValue("@editor", note.Editor);
         noteAdd.Parameters.AddWithValue("@category", note.Category);
-        noteAdd.Parameters.AddWithValue("@autoopen", note.AutoOpen);
 
         try
         {
@@ -161,12 +157,11 @@ internal class Notes : INotes
 
         using var noteUpdate = connection.CreateCommand();
         noteUpdate.CommandText =
-            "UPDATE notes SET name = @newname, location = @newlocation, editor = @neweditor, category = @newcategory, autoopen = @newautoopen WHERE name = @name";
+            "UPDATE notes SET name = @newname, location = @newlocation, editor = @neweditor, category = @newcategory WHERE name = @name";
         noteUpdate.Parameters.AddWithValue("@newname", newNote.Name);
         noteUpdate.Parameters.AddWithValue("@newlocation", newNote.Location);
         noteUpdate.Parameters.AddWithValue("@neweditor", newNote.Editor);
         noteUpdate.Parameters.AddWithValue("@newcategory", newNote.Category);
-        noteUpdate.Parameters.AddWithValue("@newautoopen", newNote.AutoOpen);
         noteUpdate.Parameters.AddWithValue("@name", name);
 
         try
