@@ -24,7 +24,8 @@ the note commands are:
 - `create [name] [-l location] [-e editor] [-c category] [-a auto open]`
     - create a note, with the specified settings.
         - if no name is supplied, the default naming format is `note-[M-d-yy-HHmmss]`.
-        - if location, editor, or category are not supplied, they will be filled in with the defaults from the configuration file.
+        - if no name is supplied, user will be prompted if they'd like to rename the note after they close it.
+        - if location, editor, category, or auto open are not supplied, they will be filled in with the defaults from the configuration file.
 - `delete <name>`
     - delete a note with the specified name.
     - if the note no longer exists on the filesystem, the entry for it will still be removed from the database.
@@ -37,6 +38,9 @@ the note commands are:
     - if the name or location are changed, the file will be renamed and moved in the filesystem respectively.
 - `list`
     - lists all the notes currently stored in the database.
+- `nuke`
+    - deletes all currently stored notes.
+    - this cannot be undone.
 
 the configuration commands are:
 
