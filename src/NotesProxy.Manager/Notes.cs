@@ -176,4 +176,14 @@ internal class Notes : INotes
             throw;
         }
     }
+
+    public void DropNotes()
+    {
+        using var connection = new SqliteConnection($"Data Source={_databaseFile};");
+        connection.Open();
+        
+        using var drop = connection.CreateCommand();
+        drop.CommandText = "DROP TABLE IF EXISTS notes;";
+        drop.ExecuteNonQuery();
+    }
 }
