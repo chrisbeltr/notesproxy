@@ -48,6 +48,20 @@ public class NoteCreate : Command<NoteCreate.Settings>
         if (NoteManager.Instance.Config.GetAutoOpen() || (settings.AutoOpen.HasValue && settings.AutoOpen.Value))
             NoteManager.Instance.Files.OpenNote(noteName);
 
+        if (settings.Name == null)
+        {
+            var prompt = new TextPrompt<string?>($"[orange1]Would you like to rename the note?[/] [orange1 italic](Press enter to keep it as \"{noteName}\")[/]").DefaultValue(null).ShowDefaultValue(false);
+            var newName = AnsiConsole.Prompt(prompt);
+            if (newName != null)
+            {
+                var oldNote = NoteManager.Instance.Notes.GetNote(noteName);
+                var newNote = oldNote with { Name = newName };
+                NoteManager.Instance.Files.MoveNote(noteName, newName);
+                NoteManager.Instance.Notes.UpdateNote(noteName, newNote);
+                noteName = newName;
+            }
+        }
+
         AnsiConsole.MarkupLine($"[green]Successfully created note [/][yellow]\"{noteName}\"[/][green].[/]");
 
         return 0;

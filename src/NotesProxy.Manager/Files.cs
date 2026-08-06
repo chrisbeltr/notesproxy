@@ -61,7 +61,7 @@ internal class Files : IFiles
         File.Create(Path.Combine(location, name)).Close();
     }
 
-    public void MoveNote(string oldName, string? newName, string? newLocation)
+    public void MoveNote(string oldName, string? newName = null, string? newLocation = null)
     {
         if (!_notes.NoteExists(oldName)) throw new Exception("Note does not exist.");
         if (newName != null && _notes.NoteExists(newName)) throw new Exception("Note already exists.");
