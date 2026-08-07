@@ -21,7 +21,6 @@ internal class Files : IFiles
         var fullPath = Path.Combine(note.Location, note.Name);
         if (!Path.Exists(fullPath)) throw new Exception("Note location does not exist.");
         ProcessStartInfo startInfo;
-        Console.WriteLine(fullPath);
         var editor = (editorOverride ?? note.Editor);
         if (OperatingSystem.IsWindows())
         {
