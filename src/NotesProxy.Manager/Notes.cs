@@ -76,7 +76,7 @@ internal class Notes : INotes
 
         using var command = connection.CreateCommand();
         command.CommandText =
-            queryCategory == null ? "SELECT * FROM notes" : "SELECT * FROM notes WHERE category = @query";
+            queryCategory == null ? "SELECT * FROM notes ORDER BY id DESC" : "SELECT * FROM notes WHERE category = @query ORDER BY id DESC";
         command.Parameters.AddWithValue("@query", queryCategory);
 
         using var reader = command.ExecuteReader();
