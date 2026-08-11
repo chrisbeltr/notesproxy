@@ -97,6 +97,19 @@ internal class Notes : INotes
         return list;
     }
 
+    public IEnumerable<string> GetSchema()
+    {
+        using var connection = new SqliteConnection($"Data Source={_databaseFile};");
+        connection.Open();
+
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT * FROM notes";
+
+        using var reader = command.ExecuteReader();
+        var schema = reader.GetColumnSchema();
+        return schema.Select(col => col.ColumnName).Where(col => col != "id");
+    }
+
     public void InsertNote(Note note)
     {
         using var connection = new SqliteConnection($"Data Source={_databaseFile};");

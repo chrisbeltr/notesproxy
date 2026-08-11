@@ -1,13 +1,37 @@
-﻿using Spectre.Console;
+﻿using NotesProxy.Manager;
+using Spectre.Console;
 
 namespace NotesProxy.Tui;
 
-public class TuiManager()
+public static class TuiManager
 {
-    public void Test()
+    public static void DisplayNotes(string title, IEnumerable<string> schema, IEnumerable<Note> notes)
     {
-        AnsiConsole.Status().Start("testing!...", ctx => { Thread.Sleep(5000); });
+        var table = new Table().Title(title).HeavyHeadBorder();
 
-        AnsiConsole.MarkupLine("[green]Done![/]");
+        foreach (var col in schema)
+        {
+            table.AddColumn(col);
+        }
+
+        foreach (var note in notes)
+        {
+            table.AddRow([note.Name, note.Location, note.Editor, note.Category]);
+        }
+        
+        AnsiConsole.Write(table);
+    }
+
+    public static void DisplayConfig(string title, IDictionary<string, object> config)
+    {
+        var table = new Table().Title(title).HideHeaders();
+        table.AddColumns(["key", "value"]);
+
+        foreach (var key in config.Keys)
+        {
+            table.AddRow(key, $"{config[key]}");
+        }
+        
+        AnsiConsole.Write(table);
     }
 }
