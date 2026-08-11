@@ -5,8 +5,6 @@ $TargetDir   = "$env:LocalAppData\Programs\NotesProxy"
 $TargetExe   = Join-Path $TargetDir (Get-Item $SourceExe).Name
 $TargetAlias = Join-Path $TargetDir np.exe
 
-echo $SourceExe
-
 # 1. Create the application directory if it doesn't exist
 if (!(Test-Path $TargetDir)) {
     New-Item -ItemType Directory -Path $TargetDir -Force | Out-Null
@@ -17,5 +15,11 @@ Move-Item -Path $SourceExe -Destination $TargetDir -Force
 Copy-Item -Path $TargetExe -Destination $TargetAlias -Force
 
 # 3. Add it to the path if it's not there already
-$currentPath = [Environment]::GetEnvironmentVariable("Path", "User")
-[Environment]::SetEnvironmentVariable("Path", "$currentPath;$TargetDir", "User")
+$UserPath = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::User)
+if ($UserPath -split ';' -notcontains $TargetDir) {
+    [Environment]::SetEnvironmentVariable("Path", "$UserPath;$TargetDir", [EnvironmentVariableTarget]::User)
+    $env:Path += ";$TargetDir" # Update current session
+    Write-Host "Successfully added '$TargetDir' to User PATH." -ForegroundColor Green
+} else {
+    Write-Host "Folder '$TargetDir' is already in User PATH." -ForegroundColor Yellow
+}
