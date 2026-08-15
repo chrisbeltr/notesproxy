@@ -52,3 +52,5 @@ the configuration commands are:
     - the auto open option works both as a normal option (type either true or false after it) or as a flag (include it in order to set it to true, though it won't be set to false by excluding it).
 - `list`
     - list all the current settings in the configuration file.
+
+you can access a textual user interface by using the `notesproxy interactive` command.
