@@ -36,6 +36,26 @@ internal class Notes : INotes
         tableCreate.ExecuteNonQuery();
     }
 
+    private bool TableExists()
+    {
+        using var connection = new SqliteConnection($"Data Source={_databaseFile};");
+        connection.Open();
+        
+        var tableExists = connection.CreateCommand();
+        tableExists.CommandText = "SELECT * FROM notes";
+
+        try
+        {
+            using var reader = tableExists.ExecuteReader();
+        }
+        catch (SqliteException ex)
+        {
+            if (ex.Message == "SQLite Error 1: 'no such table: notes'.") return false;
+        }
+
+        return true;
+    }
+
     private Note? FindNote(string name)
     {
         using var connection = new SqliteConnection($"Data Source={_databaseFile};");
@@ -198,5 +218,7 @@ internal class Notes : INotes
         using var drop = connection.CreateCommand();
         drop.CommandText = "DROP TABLE IF EXISTS notes;";
         drop.ExecuteNonQuery();
+        
+        InitializeDatabase();
     }
 }
