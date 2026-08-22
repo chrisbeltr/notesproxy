@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using NotesProxy.Manager;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Server.Controllers;
 
@@ -8,32 +9,25 @@ namespace Server.Controllers;
 [Route("api/notes")]
 public class NotesController : Controller
 {
-    private readonly IFiles _files;
     private readonly INotes _notes;
     private readonly IConfig _config;
 
-    public NotesController(IFiles files, INotes notes, IConfig config)
+    public NotesController(INotes notes, IConfig config)
     {
-        _files = files;
         _notes = notes;
         _config = config;
     }
 
     [HttpGet]
+    [SwaggerOperation(Summary = "Gets all notes", Description = "Gets all notes")]
     public ActionResult<List<Note>> GetNotes([FromQuery] string? category)
     {
         var notes = _notes.QueryDatabase(category);
         return notes;
     }
 
-    [HttpGet("/api/schema")]
-    public ActionResult<IEnumerable<string>> GetSchema()
-    {
-        var schema = _notes.GetSchema();
-        return schema.ToList();
-    }
-
     [HttpGet("{name}")]
+    [SwaggerOperation(Summary = "Gets a note", Description = "Gets a note")]
     public ActionResult<Note> GetNote(string name)
     {
         try
@@ -48,20 +42,7 @@ public class NotesController : Controller
     }
 
     [HttpPost("{name}")]
-    public ActionResult CreateNote(string name)
-    {
-        try
-        {
-            _files.CreateNote(name, _config.GetLocation());
-            return Ok();
-        }
-        catch
-        {
-            return Conflict($"Note already exists.");
-        }
-    }
-
-    [HttpPost]
+    [SwaggerOperation(Summary = "Creates a new note", Description = "Creates a new note")]
     public ActionResult InsertNote(Note note)
     {
         try
@@ -76,6 +57,7 @@ public class NotesController : Controller
     }
 
     [HttpPut("{name}")]
+    [SwaggerOperation(Summary = "Updates a note", Description = "Updates a note")]
     public ActionResult UpdateNote(string name, Note note)
     {
         try
@@ -91,53 +73,11 @@ public class NotesController : Controller
         }
     }
 
-    [HttpPut("{name}/move")]
-    public ActionResult MoveNote(string name, string newName)
-    {
-        try
-        {
-            _files.MoveNote(name, newName);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            if (ex.Message == "Note does not exist.")
-                return NotFound("Note does not exist.");
-            return Conflict($"Note already exists.");
-        }
-    }
-
     [HttpDelete("{name}")]
+    [SwaggerOperation(Summary = "Deletes a note", Description = "Deletes a note")]
     public ActionResult DeleteNote(string name)
     {
         _notes.DeleteNote(name);
-        return Ok();
-    }
-
-    [HttpDelete("{name}/delete")]
-    public ActionResult DeleteNoteFile(string name)
-    {
-        _files.DeleteNote(name);
-        return Ok();
-    }
-
-    [HttpGet("{name}/content")]
-    public ActionResult GetNoteContent(string name)
-    {
-        if (!System.IO.File.Exists(Path.Combine(_config.GetLocation(), name)))
-            return NotFound("Note not found.");
-        
-        return PhysicalFile(Path.Combine(_config.GetLocation(), name), "text/plain");
-    }
-
-    [HttpPut("{name}/content")]
-    public async Task<ActionResult> UpdateNoteContent(string name)
-    {
-        if (!System.IO.File.Exists(Path.Combine(_config.GetLocation(), name)))
-            return NotFound("Note not found.");
-
-        await using var stream = System.IO.File.OpenWrite(Path.Combine(_config.GetLocation(), name));
-        await Request.Body.CopyToAsync(stream);
         return Ok();
     }
 }

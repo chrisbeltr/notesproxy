@@ -13,7 +13,7 @@ public class Program
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c => { c.EnableAnnotations(); });
 
         builder.Services.AddSingleton(NoteManager.Instance.Notes);
         builder.Services.AddSingleton(NoteManager.Instance.Files);
