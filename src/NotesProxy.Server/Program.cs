@@ -17,6 +17,7 @@ public class Program
 
         builder.Services.AddSingleton(NoteManager.Instance.Notes);
         builder.Services.AddSingleton(NoteManager.Instance.Files);
+        builder.Services.AddSingleton(NoteManager.Instance.Config);
 
         var app = builder.Build();
 
