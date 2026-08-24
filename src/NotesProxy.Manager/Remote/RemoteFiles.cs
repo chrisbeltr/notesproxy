@@ -41,7 +41,6 @@ public class RemoteFiles(HttpClient client) : IFiles
     {
         
         var fullPath = GetNoteContentTemporaryFile(name);
-        Console.WriteLine(fullPath);
         if (!Path.Exists(fullPath)) throw new Exception("Could not get note.");
         ProcessStartInfo startInfo;
         var editor = (editorOverride ?? NoteManager.Instance.Config.GetEditor());
@@ -72,11 +71,8 @@ public class RemoteFiles(HttpClient client) : IFiles
         using var process = Process.Start(startInfo);
         process?.WaitForExit();
         
-        // get new file contents
         using var f = File.OpenRead(fullPath);
-        // send new file contents to server
         UpdateNoteContent(name, f);
-        // delete temp file
         File.Delete(fullPath);
     }
 
