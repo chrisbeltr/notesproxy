@@ -78,6 +78,16 @@ internal class Config : IConfig
         _settings.AutoOpen = autoOpen;
     }
 
+    public string GetServer()
+    {
+        return _settings.Server ?? string.Empty;
+    }
+
+    public void SetServer(string address)
+    {
+        _settings.Server = address;
+    }
+
     public Dictionary<string, object> GetAllSettings()
     {
         var dict = new Dictionary<string, object>
@@ -86,6 +96,7 @@ internal class Config : IConfig
             { "Location", GetLocation() },
             { "Category", GetCategory() },
             { "Auto Open", GetAutoOpen() },
+            { "Server", GetServer() }
         };
         return dict;
     }
@@ -97,4 +108,5 @@ public interface IConfigSettings
     string? Location { get; set; }
     string? Category { get; set; }
     bool? AutoOpen { get; set; }
+    string? Server { get; set; }
 }

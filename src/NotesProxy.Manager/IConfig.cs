@@ -14,5 +14,8 @@ public interface IConfig
     public bool GetAutoOpen();
     public void SetAutoOpen(bool autoOpen);
 
+    public string GetServer();
+    public void SetServer(string address);
+
     public Dictionary<string, object> GetAllSettings();
 }

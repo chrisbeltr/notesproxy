@@ -1,12 +1,23 @@
-﻿namespace NotesProxy.Manager;
+﻿using NotesProxy.Manager.Remote;
+
+namespace NotesProxy.Manager;
 
 public sealed class NoteManager
 {
     private NoteManager()
     {
         Config = new Config();
-        Notes = new Notes();
-        Files = new Files();
+        if (Config.GetServer() != String.Empty)
+        {
+            Client = new NoteClient(Config.GetServer());
+            Notes = Client.Notes;
+            Files = Client.Files;
+        }
+        else
+        {
+            Notes = new Notes();
+            Files = new Files();
+        }
     }
 
     private static readonly Lazy<NoteManager> LazyInstance = new(() => new NoteManager());
@@ -15,4 +26,5 @@ public sealed class NoteManager
     public IConfig Config { get; }
     public INotes Notes { get; }
     public IFiles Files { get; }
+    private NoteClient? Client { get; }
 }
