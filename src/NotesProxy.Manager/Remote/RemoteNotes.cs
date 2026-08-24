@@ -21,7 +21,8 @@ public class RemoteNotes(HttpClient client) : INotes
         }
 
         using Stream body = response.Content.ReadAsStream();
-        var note = JsonSerializer.Deserialize<Note>(body, new JsonSerializerOptions() {PropertyNameCaseInsensitive = true});
+        var note = JsonSerializer.Deserialize<Note>(body,
+            new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         return note;
     }
 
@@ -43,7 +44,8 @@ public class RemoteNotes(HttpClient client) : INotes
         }
 
         using Stream body = response.Content.ReadAsStream();
-        var note = JsonSerializer.Deserialize<List<Note>>(body, new JsonSerializerOptions() {PropertyNameCaseInsensitive = true});
+        var note = JsonSerializer.Deserialize<List<Note>>(body,
+            new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         return note!;
     }
 
@@ -57,7 +59,8 @@ public class RemoteNotes(HttpClient client) : INotes
         }
 
         using Stream body = response.Content.ReadAsStream();
-        var note = JsonSerializer.Deserialize<List<string>>(body, new JsonSerializerOptions() {PropertyNameCaseInsensitive = true});
+        var note = JsonSerializer.Deserialize<List<string>>(body,
+            new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         return note!;
     }
 
@@ -72,6 +75,8 @@ public class RemoteNotes(HttpClient client) : INotes
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
         {
+            if (response.StatusCode == HttpStatusCode.Conflict)
+                throw new Exception("Note already exists.");
             throw new Exception("Unknown error, please report this!");
         }
     }
@@ -82,6 +87,8 @@ public class RemoteNotes(HttpClient client) : INotes
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
         {
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                throw new Exception("Note not found.");
             throw new Exception("Unknown error, please report this!");
         }
     }
@@ -97,6 +104,10 @@ public class RemoteNotes(HttpClient client) : INotes
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
         {
+            if (response.StatusCode == HttpStatusCode.Conflict)
+                throw new Exception("Note already exists.");
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                throw new Exception("Note not found.");
             throw new Exception("Unknown error, please report this!");
         }
     }

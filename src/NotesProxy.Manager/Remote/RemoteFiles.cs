@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http.Headers;
 
 namespace NotesProxy.Manager.Remote;
@@ -11,6 +12,8 @@ public class RemoteFiles(HttpClient client) : IFiles
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
         {
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                throw new Exception("Note not found.");
             throw new Exception("Unknown error, please report this!");
         }
         
@@ -33,6 +36,8 @@ public class RemoteFiles(HttpClient client) : IFiles
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
         {
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                throw new Exception("Note not found.");
             throw new Exception("Unknown error, please report this!");
         }
     }
@@ -82,6 +87,8 @@ public class RemoteFiles(HttpClient client) : IFiles
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
         {
+            if (response.StatusCode == HttpStatusCode.Conflict)
+                throw new Exception("Note already exists.");
             throw new Exception("Unknown error, please report this!");
         }
     }
@@ -92,6 +99,10 @@ public class RemoteFiles(HttpClient client) : IFiles
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
         {
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                throw new Exception("Note not found.");
+            if (response.StatusCode == HttpStatusCode.Conflict)
+                throw new Exception("Note already exists.");
             throw new Exception("Unknown error, please report this!");
         }
     }
@@ -102,6 +113,8 @@ public class RemoteFiles(HttpClient client) : IFiles
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
         {
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                throw new Exception("Note not found.");
             throw new Exception("Unknown error, please report this!");
         }
     }

@@ -77,8 +77,15 @@ public class NotesController : Controller
     [SwaggerOperation(Summary = "Deletes a note", Description = "Deletes a note")]
     public ActionResult DeleteNote(string name)
     {
-        _notes.DeleteNote(name);
-        return Ok();
+        try
+        {
+            _notes.DeleteNote(name);
+            return Ok();
+        }
+        catch
+        {
+            return NotFound("Note not found.");
+        }
     }
 
     [HttpDelete]
