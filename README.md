@@ -47,10 +47,16 @@ the note commands are:
 
 the configuration commands are:
 
-- `edit [-l location] [-e editor] [-c category] [-a auto open]`
+- `edit [-l location] [-e editor] [-c category] [-a auto open] [-s server url]`
     - edit the settings in the configuration file.
     - the auto open option works both as a normal option (type either true or false after it) or as a flag (include it in order to set it to true, though it won't be set to false by excluding it).
 - `list`
     - list all the current settings in the configuration file.
 
 you can access a textual user interface by using the `notesproxy interactive` command.
+
+you can also run a notesproxy server, which notesproxy can connect to and interact with the files there. you can set the url of the server you want to connect to by running `notesproxy config edit --server [url]` (and you can unset it by passing in `""` to `[url]`.
+
+## how do i run a notesproxy server?
+
+haven't gotten there yet, sorry...
