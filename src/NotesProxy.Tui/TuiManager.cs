@@ -227,6 +227,10 @@ public static class TuiManager
                 var newAutoOpen = AnsiConsole.Prompt(new TextPrompt<bool>($"Enter new value for setting \"{setting}\":"));
                 NoteManager.Instance.Config.SetAutoOpen(newAutoOpen);
                 break;
+            case "Server":
+                var newServer = AnsiConsole.Prompt(new TextPrompt<string>($"Enter new value for setting \"{setting}\":"));
+                NoteManager.Instance.Config.SetServer(newServer);
+                break;
         }
         AnsiConsole.MarkupLine($"[green]Successfully changed configuration file.[/]");
     }
