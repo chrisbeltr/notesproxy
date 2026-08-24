@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace NotesProxy.Manager.Remote;
@@ -62,21 +63,51 @@ public class RemoteNotes(HttpClient client) : INotes
 
     public void InsertNote(Note note)
     {
-        throw new NotImplementedException();
+        using HttpRequestMessage request = new(HttpMethod.Post, "api/notes/" + note.Name);
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
+        request.Content = JsonContent.Create(note, mediaType: null, options);
+        using HttpResponseMessage response = client.Send(request);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Unknown error, please report this!");
+        }
     }
 
     public void DeleteNote(string note)
     {
-        throw new NotImplementedException();
+        using HttpRequestMessage request = new(HttpMethod.Delete, "api/notes/" + note);
+        using HttpResponseMessage response = client.Send(request);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Unknown error, please report this!");
+        }
     }
 
     public void UpdateNote(string name, Note newNote)
     {
-        throw new NotImplementedException();
+        using HttpRequestMessage request = new(HttpMethod.Put, "api/notes/" + name);
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
+        request.Content = JsonContent.Create(newNote, mediaType: null, options);
+        using HttpResponseMessage response = client.Send(request);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Unknown error, please report this!");
+        }
     }
 
     public void DropNotes()
     {
-        throw new NotImplementedException();
+        using HttpRequestMessage request = new(HttpMethod.Delete, "api/notes");
+        using HttpResponseMessage response = client.Send(request);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Unknown error, please report this!");
+        }
     }
 }
