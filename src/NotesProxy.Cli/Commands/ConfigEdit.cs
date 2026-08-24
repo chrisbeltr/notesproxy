@@ -22,6 +22,10 @@ public class ConfigEdit : Command<ConfigEdit.Settings>
         [CommandOption("-a|--autoopen")]
         [Description("The setting that decides whether notes will automatically open when using the create command")]
         public bool? AutoOpen { get; set; }
+        
+        [CommandOption("-s|--server")]
+        [Description("The remote NotesProxy server URL")]
+        public string? Server { get; set; }
     }
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
@@ -30,6 +34,7 @@ public class ConfigEdit : Command<ConfigEdit.Settings>
         if (settings.Editor != null) NoteManager.Instance.Config.SetEditor(settings.Editor);
         if (settings.Category != null) NoteManager.Instance.Config.SetCategory(settings.Category);
         if (settings.AutoOpen.HasValue) NoteManager.Instance.Config.SetAutoOpen(settings.AutoOpen.Value);
+        if (settings.Server != null) NoteManager.Instance.Config.SetServer(settings.Server);
         
         AnsiConsole.MarkupLine(
             $"[green]Successfully changed configuration file.[/]");
