@@ -80,4 +80,12 @@ public class NotesController : Controller
         _notes.DeleteNote(name);
         return Ok();
     }
+
+    [HttpDelete]
+    [SwaggerOperation(Summary = "Deletes all notes", Description = "Deletes all notes")]
+    public ActionResult DropNotes()
+    {
+        _notes.DropNotes();
+        return Ok();
+    }
 }
