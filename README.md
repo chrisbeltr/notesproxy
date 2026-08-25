@@ -15,7 +15,7 @@ dotnet publish src/NotesProxy.Cli -c Release -r [platform] -o bin/
 
 the final program will be in the `bin` folder, you can copy that anywhere in your path for your operating system.
 
-i will also be making install scripts for each operating system (haven't done macos yet sorry macos users)
+if you don't want to build it yourself, you can run one of the install scripts, which will build both the main notesproxy program and the server, and will install them in your local user binaries directory.
 
 ## how do i use it?
 
@@ -59,4 +59,6 @@ you can also run a notesproxy server, which notesproxy can connect to and intera
 
 ## how do i run a notesproxy server?
 
-haven't gotten there yet, sorry...
+you can run `dotnet publish src/NotesProxy.Server -c Release -r [platform] -o bin/` or use one of the install scripts, which will give you a `notesproxy-server` executable. this server program, by default, starts listening to port 8080, but you can pass in a custom port by running `notesproxy-server [port]`.
+
+this server only runs on http! if you want to run it in a secure context, you will need to use a reverse proxy like caddy, nginx, or iis.
