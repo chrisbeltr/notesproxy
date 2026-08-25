@@ -95,6 +95,7 @@ public class RemoteFiles(HttpClient client) : IFiles
 
     public void MoveNote(string oldName, string? newName = null, string? newLocation = null)
     {
+        if (newName == null) return;
         using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, $"api/files/{oldName}?newName={newName}");
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
