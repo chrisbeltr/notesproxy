@@ -8,9 +8,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        var port = 8080;
+        if (args.Length == 2)
+            port = int.Parse(args[1]);
         builder.WebHost.ConfigureKestrel(options =>
         {
-            options.ListenAnyIP(8080);
+            options.ListenAnyIP(port);
         });
 
         // Add services to the container.
