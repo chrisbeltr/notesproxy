@@ -100,7 +100,7 @@ public static class TuiManager
             DisplayNote(note);
             
             var choice = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("What would you like to do?")
-                .AddChoices("Open", "Edit", "Delete", "Back"));
+                .WrapAround().AddChoices("Open", "Edit", "Delete", "Back"));
             switch (choice)
             {
                 case "Open":
