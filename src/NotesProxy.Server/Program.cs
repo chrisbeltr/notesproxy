@@ -28,7 +28,7 @@ public class Program
 
         // Configure the HTTP request pipeline.
 
-        app.UseHttpsRedirection();
+        // app.UseHttpsRedirection();
 
         // app.UseAuthorization();
 
