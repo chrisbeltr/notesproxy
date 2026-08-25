@@ -9,8 +9,8 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         var port = 8080;
-        if (args.Length == 2)
-            port = int.Parse(args[1]);
+        if (args.Length == 1)
+            port = int.Parse(args[0]);
         builder.WebHost.ConfigureKestrel(options =>
         {
             options.ListenAnyIP(port);
