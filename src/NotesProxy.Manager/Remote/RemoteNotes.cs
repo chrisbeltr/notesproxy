@@ -6,6 +6,12 @@ namespace NotesProxy.Manager.Remote;
 
 public class RemoteNotes(HttpClient client) : INotes
 {
+    private T? Deserialize<T>(Stream body) =>
+        JsonSerializer.Deserialize<T>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+    private JsonContent CreateContent(Note note) => JsonContent.Create(note, mediaType: null,
+        new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
     private Note? FindNote(string name)
     {
         using HttpRequestMessage request = new(HttpMethod.Get, "api/notes/" + name);
@@ -21,8 +27,7 @@ public class RemoteNotes(HttpClient client) : INotes
         }
 
         using Stream body = response.Content.ReadAsStream();
-        var note = JsonSerializer.Deserialize<Note>(body,
-            new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        var note = Deserialize<Note>(body);
         return note;
     }
 
@@ -44,8 +49,7 @@ public class RemoteNotes(HttpClient client) : INotes
         }
 
         using Stream body = response.Content.ReadAsStream();
-        var note = JsonSerializer.Deserialize<List<Note>>(body,
-            new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        var note = Deserialize<List<Note>>(body);
         return note!;
     }
 
@@ -59,19 +63,14 @@ public class RemoteNotes(HttpClient client) : INotes
         }
 
         using Stream body = response.Content.ReadAsStream();
-        var note = JsonSerializer.Deserialize<List<string>>(body,
-            new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        var note = Deserialize<List<string>>(body);
         return note!;
     }
 
     public void InsertNote(Note note)
     {
         using HttpRequestMessage request = new(HttpMethod.Post, "api/notes/" + note.Name);
-        var options = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        };
-        request.Content = JsonContent.Create(note, mediaType: null, options);
+        request.Content = CreateContent(note);
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
         {
@@ -96,11 +95,7 @@ public class RemoteNotes(HttpClient client) : INotes
     public void UpdateNote(string name, Note newNote)
     {
         using HttpRequestMessage request = new(HttpMethod.Put, "api/notes/" + name);
-        var options = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        };
-        request.Content = JsonContent.Create(newNote, mediaType: null, options);
+        request.Content = CreateContent(newNote);
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
         {
