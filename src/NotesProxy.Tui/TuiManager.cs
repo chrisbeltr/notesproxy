@@ -11,12 +11,21 @@ public static class TuiManager
 
         foreach (var col in schema)
         {
+            if (NoteManager.Instance.Config.GetServer() != "" && (col == "location" || col == "editor"))
+                continue;
             table.AddColumn(col);
         }
 
         foreach (var note in notes)
         {
-            table.AddRow([note.Name, note.Location, note.Editor, note.Category]);
+            var row = new List<string>();
+            row.Add(note.Name);
+            if (NoteManager.Instance.Config.GetServer() == "")
+            {
+                row.AddRange([note.Location, note.Editor]);
+            }
+            row.Add(note.Category);
+            table.AddRow([.. row]);
         }
         
         AnsiConsole.Write(table);
