@@ -1,9 +1,11 @@
+using System.Buffers;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using Spectre.Console;
 
 namespace NotesProxy.Cli.Commands;
 
-public class NoteCreate : Command<NoteCreate.Settings>
+public partial class NoteCreate : Command<NoteCreate.Settings>
 {
     public class Settings : CommandSettings
     {
@@ -30,6 +32,10 @@ public class NoteCreate : Command<NoteCreate.Settings>
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
+        if (settings.Name != null && AlphanumCheck().IsMatch(settings.Name))
+            throw new Exception("Please change note name, supported characters are [a-zA-Z0-9 -_.]");
+        if (settings.Category != null && AlphanumCheck().IsMatch(settings.Category))
+            throw new Exception("Please change category name, supported characters are [a-zA-Z0-9 -_.]");
         var noteName = settings.Name ?? $"note-{DateTime.Now:M-d-yy-HHmmss}";
         var noteLocation = settings.Location ?? NoteManager.Instance.Config.GetLocation();
         if (noteLocation == "")
@@ -66,4 +72,7 @@ public class NoteCreate : Command<NoteCreate.Settings>
 
         return 0;
     }
+
+    [GeneratedRegex(@"[^a-zA-Z0-9 \-_\.]*")]
+    private static partial Regex AlphanumCheck();
 }

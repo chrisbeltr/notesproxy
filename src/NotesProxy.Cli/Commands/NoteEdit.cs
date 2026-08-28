@@ -1,9 +1,10 @@
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using Spectre.Console;
 
 namespace NotesProxy.Cli.Commands;
 
-public class NoteEdit : Command<NoteEdit.Settings>
+public partial class NoteEdit : Command<NoteEdit.Settings>
 {
     public class Settings : CommandSettings
     {
@@ -30,6 +31,10 @@ public class NoteEdit : Command<NoteEdit.Settings>
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
+        if (settings.NewName != null && AlphanumCheck().IsMatch(settings.NewName))
+            throw new Exception("Please change note name, supported characters are [a-zA-Z0-9 -_.]");
+        if (settings.NewCategory != null && AlphanumCheck().IsMatch(settings.NewCategory))
+            throw new Exception("Please change category name, supported characters are [a-zA-Z0-9 -_.]");
         if (!NoteManager.Instance.Notes.NoteExists(settings.NoteName)) throw new Exception("Note does not exist.");
         var oldNote = NoteManager.Instance.Notes.GetNote(settings.NoteName);
 
@@ -42,4 +47,7 @@ public class NoteEdit : Command<NoteEdit.Settings>
 
         return 0;
     }
+    
+    [GeneratedRegex(@"[^a-zA-Z0-9 \-_\.]*")]
+    private static partial Regex AlphanumCheck();
 }

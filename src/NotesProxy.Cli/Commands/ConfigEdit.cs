@@ -1,9 +1,10 @@
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using Spectre.Console;
 
 namespace NotesProxy.Cli.Commands;
 
-public class ConfigEdit : Command<ConfigEdit.Settings>
+public partial class ConfigEdit : Command<ConfigEdit.Settings>
 {
     public class Settings : CommandSettings
     {
@@ -30,6 +31,8 @@ public class ConfigEdit : Command<ConfigEdit.Settings>
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
+        if (settings.Category != null && AlphanumCheck().IsMatch(settings.Category))
+            throw new Exception("Please change category name, supported characters are [a-zA-Z0-9 -_.]");
         if (settings.Location != null) NoteManager.Instance.Config.SetLocation(settings.Location);
         if (settings.Editor != null) NoteManager.Instance.Config.SetEditor(settings.Editor);
         if (settings.Category != null) NoteManager.Instance.Config.SetCategory(settings.Category);
@@ -41,4 +44,7 @@ public class ConfigEdit : Command<ConfigEdit.Settings>
 
         return 0;
     }
+    
+    [GeneratedRegex(@"[^a-zA-Z0-9 \-_\.]*")]
+    private static partial Regex AlphanumCheck();
 }
