@@ -13,7 +13,14 @@ class Program
                 var notes = NoteManager.Instance.Notes.QueryDatabase();
                 foreach (var note in notes)
                 {
-                    Console.WriteLine(note.Name.Replace(" ", "\\ "));
+                    if (note.Name.Contains(' '))
+                    {
+                        Console.WriteLine($"\\\"{note.Name.Replace(" ", "\\ ")}\\\"");
+                    }
+                    else
+                    {
+                        Console.WriteLine(note.Name);
+                    }
                 }
 
                 return;
@@ -23,7 +30,14 @@ class Program
                 var categories = NoteManager.Instance.Notes.GetCategories();
                 foreach (var category in categories)
                 {
-                    Console.WriteLine(category.Replace(" ", "\\ "));
+                    if (category.Contains(' '))
+                    {
+                        Console.WriteLine($"\\\"{category.Replace(" ", "\\ ")}\\\"");
+                    }
+                    else
+                    {
+                        Console.WriteLine(category);
+                    }
                 }
 
                 return;
