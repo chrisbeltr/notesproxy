@@ -2,6 +2,7 @@
 set -euo pipefail
 
 TARGET_DIR="$HOME/.local/bin"
+COMPLETION_DIR="$HOME/.local/share/bash-completion/completions"
 PUBLISH_DIR="src/NotesProxy.Cli/bin/publish"
 SERVER_PUBLISH_DIR="src/NotesProxy.Server/bin/publish"
 
@@ -14,6 +15,10 @@ chmod +x "$TARGET_DIR/notesproxy"
 cp "$TARGET_DIR/notesproxy" "$TARGET_DIR/np"
 cp "$SERVER_PUBLISH_DIR/notesproxy-server" "$TARGET_DIR/notesproxy-server"
 chmod +x "$TARGET_DIR/notesproxy-server"
+
+mkdir -p "$COMPLETION_DIR"
+cp "completion/completely.bash" "$COMPLETION_DIR/notesproxy"
+cp "completion/completely.bash" "$COMPLETION_DIR/np"
 
 if [[ ":$PATH:" != *":$TARGET_DIR:"* ]]; then
     RC_FILE="$HOME/.bashrc"

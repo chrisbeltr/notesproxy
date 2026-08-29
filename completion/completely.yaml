@@ -1,0 +1,28 @@
+patterns:
+  - notesproxy note|n create|c <any> [fullops]
+  - notesproxy note|n create|c [fullops]
+  - notesproxy note|n delete|d <name>
+  - notesproxy note|n list|ls <category>
+  - notesproxy note|n edit|e <name> [fullops]
+  - notesproxy note|n open|o <name> [open]
+  - notesproxy note|n nuke|n
+  - notesproxy config|c edit|e [fullops]
+  - notesproxy config|c list|ls
+  - notesproxy interactive|i
+
+options:
+  fullops:
+    - -l|--location <location>
+    - -e|--editor <editor>
+    - -c|--category <category>
+    - -a|--autoopen <bool>
+  open:
+    - -e|--editor <editor>
+
+tokens:
+  any: ~
+  bool: [true, false]
+  location: +directory
+  editor: +command
+  name: $(np nls)
+  category: $(np cls)  
