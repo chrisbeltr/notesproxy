@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.ComponentModel;
+using System.Text;
 using System.Text.RegularExpressions;
 using Spectre.Console;
 
@@ -73,6 +74,6 @@ public partial class NoteCreate : Command<NoteCreate.Settings>
         return 0;
     }
 
-    [GeneratedRegex(@"[^a-zA-Z0-9 \-_\.]*")]
+    [GeneratedRegex(@"[^a-zA-Z0-9 \-_\.]+")]
     private static partial Regex AlphanumCheck();
 }

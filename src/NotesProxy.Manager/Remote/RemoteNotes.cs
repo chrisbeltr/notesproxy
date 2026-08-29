@@ -55,7 +55,7 @@ public class RemoteNotes(HttpClient client) : INotes
 
     public IEnumerable<string> GetSchema()
     {
-        using HttpRequestMessage request = new(HttpMethod.Get, "api/schema");
+        using HttpRequestMessage request = new(HttpMethod.Get, "api/info/schema");
         using HttpResponseMessage response = client.Send(request);
         if (!response.IsSuccessStatusCode)
         {
@@ -115,5 +115,19 @@ public class RemoteNotes(HttpClient client) : INotes
         {
             throw new Exception("Unknown error, please report this!");
         }
+    }
+
+    public List<string> GetCategories()
+    {
+        using HttpRequestMessage request = new(HttpMethod.Get, "api/info/category");
+        using HttpResponseMessage response = client.Send(request);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Unknown error, please report this!");
+        }
+        
+        using Stream body = response.Content.ReadAsStream();
+        var categories = Deserialize<List<string>>(body);
+        return categories!;
     }
 }

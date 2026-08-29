@@ -10,4 +10,5 @@ public interface INotes
     public void DeleteNote(string note);
     public void UpdateNote(string name, Note newNote);
     public void DropNotes();
+    public List<string> GetCategories();
 }

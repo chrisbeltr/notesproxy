@@ -48,6 +48,6 @@ public partial class NoteEdit : Command<NoteEdit.Settings>
         return 0;
     }
     
-    [GeneratedRegex(@"[^a-zA-Z0-9 \-_\.]*")]
+    [GeneratedRegex(@"[^a-zA-Z0-9 _\-\.]+")]
     private static partial Regex AlphanumCheck();
 }

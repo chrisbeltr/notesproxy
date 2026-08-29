@@ -6,11 +6,35 @@ class Program
 {
     static void Main(string[] args)
     {
+        if (args.Length > 0)
+        {
+            if (args[0] == "nls")
+            {
+                var notes = NoteManager.Instance.Notes.QueryDatabase();
+                foreach (var note in notes)
+                {
+                    Console.WriteLine(note.Name.Replace(" ", "\\ "));
+                }
+
+                return;
+            }
+            if (args[0] == "cls")
+            {
+                var categories = NoteManager.Instance.Notes.GetCategories();
+                foreach (var category in categories)
+                {
+                    Console.WriteLine(category.Replace(" ", "\\ "));
+                }
+
+                return;
+            }
+        }
         var app = new CommandApp();
         app.Configure(config =>
         {
             config.SetHelpProvider(new NotesHelp(config.Settings));
             config.SetApplicationName("notesproxy");
+            config.PropagateExceptions();
             
             config.AddBranch("note", note =>
             {

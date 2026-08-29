@@ -36,6 +36,24 @@ internal class Notes : INotes
         tableCreate.ExecuteNonQuery();
     }
 
+    public List<string> GetCategories()
+    {
+        using var connection = new SqliteConnection($"Data Source={_databaseFile};");
+        connection.Open();
+        
+        var categories = connection.CreateCommand();
+        categories.CommandText = "SELECT DISTINCT category FROM notes";
+        
+        using var reader = categories.ExecuteReader();
+        var list = new List<string>();
+        while (reader.Read())
+        {
+            list.Add(reader.GetString(0));
+        }
+
+        return list;
+    }
+
     private bool TableExists()
     {
         using var connection = new SqliteConnection($"Data Source={_databaseFile};");
